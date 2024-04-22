@@ -27,3 +27,4 @@ IBMQ.save_account('YOUR_API_TOKEN')
 
 python code/teleportation.py
 ```
+pip uninstall qiskit-terra
