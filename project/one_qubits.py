@@ -23,7 +23,7 @@ qc = QuantumCircuit(1)
 qc.x(0)  # Apply X gate to prepare qubit in |1⟩ state
 
 
-st_circuits = StateTomography(circuit=qc)
+st_circuits = StateTomography(qc)
 backend = service.backend("ibmq_qasm_simulator")
 
 noise_model = NoiseModel.from_backend(backend)
@@ -32,14 +32,17 @@ for t in time_steps:
     ad_error = amplitude_damping_error(gamma * t, excited_state_population=1)
     noise_model.add_quantum_error(ad_error, ['x', 'id'], [0])
 
-backend = QasmSimulator(method='density_matrix',
-                        noise_model=noise_model)
+backend_qasm = QasmSimulator(method='density_matrix',
+                             noise_model=noise_model,
+                             )
 
-stdata = st_circuits.run(backend).block_for_results()
+stdata = st_circuits.run(backend, seed_simulation=100).block_for_results()
 # print("stdata = ", stdata)
 
 state_result = stdata.analysis_results("state")
-prob = DensityMatrix(state_result.value).probabilities()
+prob = DensityMatrix(state_result.value)
+density_matrices = [prob]
+probabilities = [dm.data[1, 1].real for dm in density_matrices]
 
 
-print("prob = ", prob)
+print("prob = ", probabilities)
