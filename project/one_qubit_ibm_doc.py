@@ -79,4 +79,4 @@ plt.grid(True)
 plt.show()
 
 
-# time series
+# https://docs.quantum.ibm.com/verify/using-ibm-quantum-simulators
